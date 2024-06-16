@@ -1,0 +1,64 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" type="text/css" href="/css/book_session.css">
+</head>
+<body>
+<%- include('../includes/navigation.ejs') %>
+
+<div class="sessions-container">
+    <h1>Your Sessions</h1>
+    <% if (sessions.length > 0) { %>
+        <% sessions.forEach(session => { %>
+            <div class="section">
+                <img src="<%= session.picture.path %>" alt="<%= session.name %>">
+                <div class="info">
+                    <h2><%= session.name %></h2>
+                    <p>Shift: <%= session.shift %></p>
+                    <p>Description: <%= session.description %></p>
+                </div>
+                <% if(user.role==="Member"){ %>
+                <form method="post" action="sessions/<%= session.doctorId %>/">
+                <div>
+                    <input type="hidden" name="sessionId" value="<%= session._id %>">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button class="button" name="add" type="submit">Add</button>
+                </div>
+                </form>
+                <% } %>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p>No sessions available.</p>
+    <% } %>
+</div>
+<% if(user.role==="Doctor"){ %>
+<div class="add-session-container">
+    <h1>Add New Session</h1>
+    <form action="/<%= user.role.toLowerCase() %>/sessions" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Session Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="shift">Shift:</label>
+            <input type="text" id="shift" name="shift" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="picture">Select Picture:</label>
+            <select id="picture" name="picture" required>
+                <option value="/images/female.jpg">Female</option>
+                <option value="/images/male.jpg">Male</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit">Add Session</button>
+        </div>
+    </form>
+</div>
+<% } %>
+<%- include('../includes/footer.ejs') %>
+<%- include('../includes/end.ejs') %>

@@ -1,0 +1,46 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/signup.css">
+
+</head>
+<body>
+<%- include('../includes/navigation.ejs') %>
+
+<div class="signup-container">
+    <p><% if (errorMessage) { %>
+    <div class="user-message user-message--error"><%= errorMessage %></div>
+    <% } %><br></p>
+    <h1>Signup on FreshMind</h1>
+    <form id="signup-form" action="/auth/signup" method="post" enctype="multipart/form-data">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <label for="role">Role:</label>
+        <select id="role" name="role" required>
+            <option value="Member">Member</option>
+            <option value="Admin">Admin</option>
+            <option value="Doctor">Doctor</option>
+        </select>
+        <div id="certificationsField" style="display: none; text-align: left">
+            <label for="filenameinput" >File Name:</label>
+            <input type="text" name="filenameinput" id="filenameinput">
+            <br>
+            <label for="certifications">Certifications:</label>
+            <input type="file" id="certifications" name="certifications" accept=".pdf, .doc, .docx">
+        </div>
+        <div class="submit-area">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="signup-button">Signup</button>
+        </div>
+    </form>
+    <p>Already have an account? <a href="/auth/login">Login</a></p>
+</div>
+<script>
+    document.getElementById("role").addEventListener("change", function () {
+        var certificationsField = document.getElementById("certificationsField");
+        certificationsField.style.display = (this.value === "Doctor") ? "block" : "none";
+    });
+</script>
+<%- include('../includes/end.ejs') %>

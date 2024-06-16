@@ -1,0 +1,38 @@
+<header>
+    <nav class="navbar">
+        <div class="company-name">
+            <a href="/">FreshMind</a>
+        </div>
+
+        <ul class="navigation">
+            <% if(isAuthenticated){ %>
+                <li><a href="/<%= user.role.toLowerCase() %>/dashboard">Home</a></li>
+            <% }else{ %>
+                <li><a href="/">Home</a></li>
+            <% } %>
+            <% if(isAuthenticated){ %>
+            <% if(user.role!=="Doctor"){ %>
+            <li><a href="/onlineresorces">Online Resources</a></li>
+            <% } %>
+            <% if(!user) { %>
+            <li><a href="/<%= user.role.toLowerCase() %>/sessions">Session</a></li>
+            <% }else{ %>
+            <li><a href="/<%=  user.role === 'Admin' ? 'admin' : user.role === 'Doctor' ? 'doctor' : 'member' %>/sessions">Session</a></li>
+            <% } %>
+            <% } %>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/feedback">Feedback</a></li>
+        </ul>
+        <div class="auth-buttons">
+            <% if (!isAuthenticated) { %>
+                <a href="/auth/signup" class="signup-button">Sign Up</a>
+                <a href="/auth/login" class="login-button">Login</a>
+            <% } else { %>
+                <form action="/auth/logout" method="post">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="submit" name="logout"  class="logout-button">Logout</button>
+                </form>
+            <% } %>
+        </div>
+    </nav>
+</header>

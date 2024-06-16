@@ -1,0 +1,66 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" type="text/css" href="/css/courseContent.css">
+</head>
+<body>
+<%- include('../includes/navigation.ejs') %>
+
+<section id="Chapter">
+    <h1 class="mainHeading"><%= course.name %></h1>
+    <h2><%= course.description %></h2>
+    <p><%= courseContent.length %> Chapters</p>
+
+    <div class="container1">
+        <% courseContent.forEach((chapter, index) => { %>
+            <div>
+                <h1>Chapter <%= index + 1 %></h1>
+                <ul>
+                    <% chapter.content.forEach(contentItem => { %>
+                        <li>
+                            <label for="<%= contentItem.name + index %>">
+                                <img src="/images/<%= contentItem.type %>.png" alt="">
+                                <a href="<%= contentItem.href %>"><%= contentItem.name %></a>
+                            </label>
+                        </li>
+                    <% }); %>
+                </ul>
+            </div>
+        <% }); %>
+
+    </div>
+</section>
+
+<% if(user.role==="Admin"){ %>
+<section id="Chapter">
+    <!-- ... existing content ... -->
+    <!-- Form for adding new content -->
+    <div class="add-content-form">
+        <h2>Add New Chapter</h2>
+        <form action="/<%= user.role.toLowerCase() %>/courses/<%= course._id %>" method="post">
+            <div class="form-group">
+                <label for="chapterName">Chapter Name:</label>
+                <input type="text" id="chapterName" name="chapterName" required>
+            </div>
+            <div class="form-group">
+                <label for="chapterHref">Chapter Link:</label>
+                <input type="text" id="chapterHref" name="chapterHref" required>
+            </div>
+            <div class="form-group">
+                <label for="chapterType">Chapter Type:</label>
+                <select id="chapterType" name="chapterType" required>
+                    <option value="book">Book</option>
+                    <option value="quiz">Quiz</option>
+                    <option value="video">Video</option>
+                </select>
+<!--                <input type="text" id="chapterType" name="chapterType" required>-->
+            </div>
+            <!-- Add other fields for content details as needed -->
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="button" type="submit">Add Chapter</button>
+        </form>
+    </div>
+</section>
+<% } %>
+<%- include('../includes/footer.ejs') %>
+
+<%- include('../includes/end.ejs') %>
+
